@@ -1,5 +1,5 @@
 ---
-title: '関数仕様 - 処理に設定するオプション'
+title: "関数仕様 - 処理に設定するオプション"
 ---
 
 # 処理に設定するオプション
@@ -506,6 +506,48 @@ JSON値を設定します。設定したパスに他の値があっても、json
 ],
 ```
 
+### jsonGetThrowError
+
+JSON値を取得します。値がない場合はエラーを返します。  
+getThrowErrorのJson版です。
+
+| 必要パラメータ | 説明                                                                                |
+| -------------- | ----------------------------------------------------------------------------------- |
+| functionName   | `jsonGetThrowError`                                                                 |
+| keyRef         | データ値を取得するキーを設定します                                                  |
+| opts.path      | Jsonで取得する値までのパスを指定します。<br>デフォルトではルート(`$`)が設定されます |
+| output         | DBに格納されたデータ内容を定義します。                                              |
+
+設定例:
+
+```ts
+[
+  {
+    keyRef: "keyname",
+    functionName: 'jsonGetThrowError',
+    opts: {
+      path: "$"
+    },
+    output: z.object({
+      value: z.object({
+        hoge: z.string()
+      })
+    })
+  },
+],
+// { value: { hoge: "fuga"}} から"fuga"を取得する場合
+[
+  {
+    keyRef: "keyname",
+    functionName: 'jsonGetThrowError',
+    opts: {
+      path: "$.value.hoge"
+    },
+    output: z.string()
+  },
+],
+```
+
 ### incrSum
 
 キーパターンを指定し、マッチするキーの値の総計を取得します。
@@ -870,6 +912,37 @@ Inputをパススルーします。固定値を定義したり、RefMarkerをObj
 ],
 ```
 
+### parseNum, parseBool
+
+InputをNumber/Booleanに変換します。できない場合`undefined`を返します。
+
+| 必要パラメータ | 説明                                                                                    |
+| -------------- | --------------------------------------------------------------------------------------- |
+| functionName   | `defineRef`                                                                             |
+| input          | 変換する値、またはRefMarkerを設定します                                                 |
+| output         | `z.number()`または`z.boolean()`<br>`undefined`を許容する場合、`.optioanl()`も付与します |
+
+設定例:
+
+```ts
+// parseNum
+[
+    {
+        functionName: 'parseNum',
+        input: "200",
+        output: z.number(),
+    },
+],
+// parseBool
+[
+    {
+        functionName: 'parseBool',
+        input: "true",
+        output: z.boolean(),
+    },
+],
+```
+
 ### numSum/numAvg
 
 - numSum: 数値の配列から合計を出力します。
@@ -894,6 +967,83 @@ Inputをパススルーします。固定値を定義したり、RefMarkerをObj
         functionName: 'numAvg',
         input: ['${#0}', 0], // <---- 処理#0(合計値)と0を入力
         output: z.number(), // <--- 2値の平均を出力
+    },
+],
+```
+
+### numCompare
+
+最初の値とあとに続くすべての値を比較します。配列が2以下の場合は必ずfalseを返します。
+
+| 必要パラメータ | 説明                                                                                             |
+| -------------- | ------------------------------------------------------------------------------------------------ |
+| functionName   | `numCompare`                                                                                     |
+| input          | 配列、または配列のRefMarkerを指定します。                                                        |
+| opts.operator  | 比較演算子を設定します。<nr>次から選択します: `eq`,`ne`,`gt`,`ge`,`lt`,`lg` <br>デフォルト: `eq` |
+| output         | `z.boolean()`を定義します。                                                                      |
+
+設定例:
+
+```ts
+[
+    {
+        functionName: 'numCompare',
+        input: "${#}", // <--- 配列のRefMarker
+        output: z.boolean(), // すべての配列が一致している場合は true
+    },
+],
+// 直接設定する場合
+[
+    {
+        functionName: 'numCompare',
+        input: [100, 50, 30. 80], // <---- 直接配列で指定も可能
+        opts: {
+          operator: "gt" // <-- 100 > 50, 100 > 30, 100 > 80 を検証
+        },
+        output: z.boolean(), // <--- 上記の入力の場合は true
+    },
+],
+```
+
+### isAllSame
+
+配列の値がすべて一致していた場合に`true`、そうでない場合に`false`を返します。
+
+| 必要パラメータ | 説明                                      |
+| -------------- | ----------------------------------------- |
+| functionName   | `defineRef`                               |
+| input          | 配列、または配列のRefMarkerを指定します。 |
+| output         | `z.boolean()`を定義します。               |
+
+設定例:
+
+```ts
+// 固定値をそのまま次の出力に渡す
+[
+    {
+        functionName: 'defineRef',
+        input: {
+            key1: 'value1',
+            key2: 'value2',
+        },
+        output: z.object({
+            key1: z.string(),
+            key2: z.string(),
+        }),
+    },
+],
+// RefMarkerの形を変形する
+[
+    {
+        functionName: 'defineRef',
+        input: {
+            value: '${#.value1}',
+            array: ['${#.value2}', '${#.value3}'],
+        },
+        output: z.object({
+            value: z.string(),
+            array: z.string().array(),
+        }),
     },
 ],
 ```
