@@ -226,9 +226,47 @@ apiResult関数を用いた疑似テストとCloudflare:testを用いた実証�
 
 いずれの場合も、開発用に`Upstash Redis`のデータベースを別途作成してください。データベースのMockは執筆現在は提供していません。
 
+## テスト準備
+
+vitest.config.tsのincludeを編集します。
+
+```diff: vitest.config.ts
+import { defineWorkersConfig } from '@cloudflare/vitest-pool-workers/config'
+import * as path from 'path'
+
+export default defineWorkersConfig({
+    test: {
+        poolOptions: {
+            workers: {
+                wrangler: { configPath: './wrangler.toml' },
+            },
+        },
+        alias: {
+            '@': path.resolve(__dirname, './src'),
+        },
+        include: [
++            'test/YourExtend/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+-            'test/example/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+-            'test/base/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+        ],
+    },
+})
+```
+
+`test/YourExtend`ディレクトリを作成し、こちらにテストを書いていきます。
+
+::: message alert
+
+`test/example`および`test/base`のtestは削除しないでください。  
+親リポジトリの変更により、コンフリクトが起きる可能性があります。
+
+:::
+
 ## 疑似テスト
 
 疑似テストは本番コードにAPI定義を追加する必要がないことから、開発中のAPIや、本番環境に含めないAPIなどのテストに適しています。
+
+こちらは`test/example/favoExtend`以外のテストがこの形式で記載されています。
 
 `Extender`により提供される`apiResult`関数は、Cloudflare workerにラップされる前の処理結果を提供します。そのため、500系エラーについても本文通り出力されます。
 
@@ -270,6 +308,8 @@ describe('API test', () => {
 ## 実証テスト
 
 本番環境向けに展開する予定のある関数では`cloudflare:test`を用いた実証テストを行ってください。
+
+`test/example/favoExtend`のみこの形式で記載されています。
 
 ```ts
 // test/index.spec.ts
