@@ -912,7 +912,7 @@ Inputをパススルーします。固定値を定義したり、RefMarkerをObj
 ],
 ```
 
-### parseNum, parseBool
+### parseNum/parseBool
 
 InputをNumber/Booleanに変換します。できない場合`undefined`を返します。
 
@@ -1018,32 +1018,20 @@ InputをNumber/Booleanに変換します。できない場合`undefined`を返�
 設定例:
 
 ```ts
-// 固定値をそのまま次の出力に渡す
+// numCompareとは違い、文字列の比較が可能
 [
     {
-        functionName: 'defineRef',
-        input: {
-            key1: 'value1',
-            key2: 'value2',
-        },
-        output: z.object({
-            key1: z.string(),
-            key2: z.string(),
-        }),
+        functionName: 'isAllSame',
+        input: ["hoge", "hoge", "hoge"],
+        output: z.boolean()
     },
 ],
-// RefMarkerの形を変形する
+// 型が違う場合、当然false
 [
     {
-        functionName: 'defineRef',
-        input: {
-            value: '${#.value1}',
-            array: ['${#.value2}', '${#.value3}'],
-        },
-        output: z.object({
-            value: z.string(),
-            array: z.string().array(),
-        }),
+        functionName: 'isAllSame',
+        input: ["true", true],
+        output: z.boolean()
     },
 ],
 ```
