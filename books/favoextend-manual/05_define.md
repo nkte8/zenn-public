@@ -1,5 +1,5 @@
 ---
-title: '概要 - APIの定義方法'
+title: "概要 - APIの定義方法"
 ---
 
 # APIの定義方法
@@ -56,27 +56,28 @@ Definitionクラスは次のように定義されます。
 
 - `apiDef`のパラメータ
 
-  | 引数   | 必須 | 説明                                                                                                             |
-  | ------ | ---- | ---------------------------------------------------------------------------------------------------------------- |
-  | path   | o    | APIの受け口となるパスを定義します                                                                                |
-  | method | o    | HTTPメソッド(`GET`や`POST`など)を定義します                                                                      |
-  | query  | x    | Zodオブジェクトで、HTTPリクエストのURLクエリを定義します<br>inputが指定された場合はqueryの設定値は無効になります |
-  | input  | x    | Zodオブジェクトで、HTTPリクエストのBodyを定義します。<br>queryが同時に設定された場合はinputで入力を上書きします  |
-  | output | x    | **RelatinType**の形(後述)で、出力を定義します                                                                    |
+  | 引数   | 必須 | 説明                                                                                                                                                      |
+  | ------ | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | path   | o    | APIの受け口となるパスを定義します                                                                                                                         |
+  | method | o    | HTTPメソッド(`GET`や`POST`など)を定義します                                                                                                               |
+  | query  | x    | Zodオブジェクトで、HTTPリクエストのURLクエリを定義します<br>zodの内部はz.string()のみ定義できます<br>inputが指定された場合はqueryの設定値は無効になります |
+  | input  | x    | Zodオブジェクトで、HTTPリクエストのBodyを定義します。<br>queryが同時に設定された場合はinputで入力を上書きします                                           |
+  | output | x    | **RelatinType**の形(後述)で、出力を定義します                                                                                                             |
 
 - `dbDefs`のパラメータ
 
-  | 引数         | 必須 | 説明                                                                                                                 |
-  | ------------ | ---- | -------------------------------------------------------------------------------------------------------------------- |
-  | keyRef       | x    | DBに対して操作を行うキーの名前を指定します                                                                           |
-  | multiKeysRef | x    | DBに対して操作を行うキーの配列への**RefMarker**(後述)を指定します                                                    |
-  | functionName | o    | DBに対して操作を行う**関数名**(後述)を指定します                                                                     |
-  | input        | x    | RelatinTypeの形で、入力を定義します                                                                                  |
-  | output       | x    | Zodオブジェクトで、出力を定義します                                                                                  |
-  | ignoreFail   | x    | 本操作が失敗した場合もFailせず次の処理へ進みます                                                                     |
-  | ignoreOutput | x    | 本操作の`output`は型が検証されません(outputが保証されません)                                                         |
-  | dependFunc   | x    | numberの配列で、依存する処理番号を記載します<br>この値が指定された処理は、依存する処理が失敗した場合は処理されません |
-  | opts         | x    | DBに対して操作を行う処理に、追加の入力を指定します                                                                   |
+  | 引数         | 必須 | 説明                                                                                                             |
+  | ------------ | ---- | ---------------------------------------------------------------------------------------------------------------- |
+  | keyRef       | x    | DBに対して操作を行うキーの名前を指定します                                                                       |
+  | multiKeysRef | x    | DBに対して操作を行うキーの配列への**RefMarker**(後述)を指定します                                                |
+  | functionName | o    | DBに対して操作を行う**関数名**(後述)を指定します                                                                 |
+  | input        | x    | RelatinTypeの形で、入力を定義します                                                                              |
+  | output       | x    | Zodオブジェクトで、出力を定義します                                                                              |
+  | ignoreFail   | x    | 本操作がFailした場合も処理を終了せず、次の処理へ進みます                                                         |
+  | ignoreOutput | x    | 本操作の`output`は型が検証されません(outputが保証されません)                                                     |
+  | dependFunc   | x    | numberの配列で、依存する処理番号を記載します<br>この値が指定された処理は、依存する処理が失敗した場合はFailします |
+  | ifRef        | x    | boolean型を指すRefMarkerを設定します。<br>Falseの場合は処理をスキップします。                                    |
+  | opts         | x    | DBに対して操作を行う処理に、追加の入力を指定します                                                               |
 
 ### RelationTypeについて
 
@@ -88,7 +89,7 @@ type RelationType =
   | string
   | number
   | boolean
-  | RelationType[]
+  | RelationType[];
 /* 以下は設定可能な内容
 - output: "string"
 - output: {
@@ -125,35 +126,35 @@ type RelationType =
 ```ts
 export const TestAddRanking = new Definition(
   {
-    path: '/addRank',
-    method: 'POST',
+    path: "/addRank",
+    method: "POST",
     input: z.object({
       handle: z.string(),
     }),
-    output: { rank: '${#2}' }, // <-- 処理#2 の結果を { rank: <...>}の<...>へ代入
+    output: { rank: "${#2}" }, // <-- 処理#2 の結果を { rank: <...>}の<...>へ代入
   },
   [
     {
-      keyRef: 'user/${#.handle}/*', // <-- inputの handle 値を keyRef に代入
-      functionName: 'incrSum',
+      keyRef: "user/${#.handle}/*", // <-- inputの handle 値を keyRef に代入
+      functionName: "incrSum",
       output: z.number().default(0),
     },
     {
-      keyRef: 'rank/favo',
-      functionName: 'zaddSingle',
+      keyRef: "rank/favo",
+      functionName: "zaddSingle",
       input: {
-        score: '${#0}', // <-- 処理#0(incrSum)の結果を score の値に代入
-        member: '${#.handle}', // <-- inputのhandle値を member に代入
+        score: "${#0}", // <-- 処理#0(incrSum)の結果を score の値に代入
+        member: "${#.handle}", // <-- inputのhandle値を member に代入
       },
     },
     {
-      keyRef: 'rank/favo',
-      functionName: 'zrevrank',
-      input: '${#.handle}', // <-- inputのhandle値を member に代入
+      keyRef: "rank/favo",
+      functionName: "zrevrank",
+      input: "${#.handle}", // <-- inputのhandle値を member に代入
       output: z.number(),
     },
-  ],
-)
+  ]
+);
 ```
 
 ### 関数名について
