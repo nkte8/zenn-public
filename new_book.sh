@@ -1,11 +1,12 @@
 #!/bin/bash
 cd `dirname $0`
-dir_name=articles
-slug_prefix=article
-
-r_ver=00$(($(find ./articles/ -name $(date +%Y-%m-%d)* | wc -l) + 1))
-slug_name=$(date +%Y-%m-%d)-r${r_ver: -2}
-
+if [[ $# -ne 1 ]];then
+    echo "Input slug" >&2
+    exit 1
+fi
+dir_name=books
+slug_prefix=book
+slug_name=$1
 echo -en "$slug_name" | grep -E "[a-z0-9]+([_-][a-z0-9])+" > /dev/null
 if [[ $? -ne 0 ]];then
     echo "Invalid Slug, must contain -_" >&2
@@ -25,6 +26,6 @@ fi
 echo "slug_name: $slug_name"
 
 git checkout -b "${slug_prefix}/${slug_name}" && \
-npx zenn new:article --published true --slug $slug_name
+npx zenn new:book --published true --slug $slug_name
 
 mkdir -v ./images/${dir_name}/${slug_name} && touch ./images/${dir_name}/${slug_name}/.gitkeep
