@@ -1,0 +1,15 @@
+title: 'favoExtend マニュアル'
+summary: '無料のクラウドサービスで簡単にAPIバックエンドを作るプロダクト「favoExtend」の日本語の利用マニュアルです'
+topics: ['upstash', 'cloudflare', 'redis', 'api', 'typescript'] # トピック（5つまで）
+published: true # falseだと下書き
+price: 0 # 有料の場合200〜5000
+toc_depth: 3
+chapters:
+  - 01_about
+  - 02_setup
+  - 03_prepair
+  - 04_deploy
+  - 05_define
+  - 06_functions
+  - 07_extendfunc
+  - 99_atlast
