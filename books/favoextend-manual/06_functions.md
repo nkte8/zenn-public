@@ -943,7 +943,7 @@ inputのbool値が`true`の場合にカスタムエラーを出力します。
 ],
 ```
 
-### parseNum/parseBool
+### numConv/boolConv
 
 InputをNumber/Booleanに変換します。できない場合`undefined`を返します。
 
@@ -951,23 +951,25 @@ InputをNumber/Booleanに変換します。できない場合`undefined`を返�
 | -------------- | --------------------------------------------------------------------------------------- |
 | functionName   | `defineRef`                                                                             |
 | input          | 変換する値、またはRefMarkerを設定します                                                 |
+| opts.reverse   | Inputが変換できた場合、値を逆転(numberの場合は-1で乗算、booleanの場合は否定処理)を実施  |
+| opts.abs       | Inputが変換できた場合、値を絶対値に変換(numConvのみ)                                    |
 | output         | `z.number()`または`z.boolean()`<br>`undefined`を許容する場合、`.optioanl()`も付与します |
 
 設定例:
 
 ```ts
-// parseNum
+// numConv
 [
     {
-        functionName: 'parseNum',
+        functionName: 'numConv',
         input: '200',
         output: z.number(),
     },
 ],
-// parseBool
+// boolConv
 [
     {
-        functionName: 'parseBool',
+        functionName: 'boolConv',
         input: 'true',
         output: z.boolean(),
     },
