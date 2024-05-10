@@ -34,14 +34,15 @@ RedisコマンドをほぼそのままAPIに落とし込んだ内容です。
 ],
 ```
 
-### incr
+### incrby
 
-[UpstashRedis INCRのラッパーです](https://upstash.com/docs/oss/sdks/ts/redis/commands/string/incr)。対象のデータ値を1増やします
+[UpstashRedis INCRBYのラッパーです](https://upstash.com/docs/oss/sdks/ts/redis/commands/string/incrby)。対象のデータ値を1増やします
 
-| 必要パラメータ | 説明                             |
-| -------------- | -------------------------------- |
-| functionName   | `incr`                           |
-| keyRef         | データ値を増やすキーを指定します |
+| 必要パラメータ | 説明                                                        |
+| -------------- | ----------------------------------------------------------- |
+| functionName   | `incrby`                                                    |
+| keyRef         | データ値を増やすキーを指定します                            |
+| input          | データを増やす数を指定します。指定されない場合、1追加します |
 
 設定例:
 
@@ -49,7 +50,7 @@ RedisコマンドをほぼそのままAPIに落とし込んだ内容です。
 [
   {
     keyRef: 'favo/${#.id}',
-    functionName: 'incr',
+    functionName: 'incrby',
   },
 ],
 ```
@@ -760,16 +761,16 @@ Object in Arrayを展開し、Array in Objectにして出力します。
 例えば以下の値は...
 
 ```json
-{ 'hoge': ['a', 'b', 'c'], 'fuga': [100, 300, 500] }
+{ "hoge": ["a", "b", "c"], "fuga": [100, 300, 500] }
 ```
 
 以下のように変換されます。
 
 ```json
 [
-  { 'hoge': 'a', 'fuga': 100 },
-  { 'hoge': 'b', 'fuga': 300 },
-  { 'hoge': 'c', 'fuga': 500 }
+  { "hoge": "a", "fuga": 100 },
+  { "hoge": "b", "fuga": 300 },
+  { "hoge": "c", "fuga": 500 }
 ]
 ```
 
