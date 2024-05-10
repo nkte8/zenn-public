@@ -1,5 +1,5 @@
 ---
-title: "関数仕様 - 処理に設定するオプション"
+title: '関数仕様 - 処理に設定するオプション'
 ---
 
 # 処理に設定するオプション
@@ -70,7 +70,7 @@ RedisコマンドをほぼそのままAPIに落とし込んだ内容です。
 [
   {
     functionName: 'defineRef',
-    input: ["key1","key2","key3"],
+    input: ['key1','key2','key3'],
     output: z.string().array()
   },
   {
@@ -96,7 +96,7 @@ RedisコマンドをほぼそのままAPIに落とし込んだ内容です。
 ```ts
 [
   {
-    keyRef: "keyname",
+    keyRef: 'keyname',
     functionName: 'get',
     output: z.string()
   },
@@ -119,22 +119,22 @@ RedisコマンドをほぼそのままAPIに落とし込んだ内容です。
 ```ts
 [
   {
-    keyRef: "keyname",
+    keyRef: 'keyname',
     functionName: 'set',
-    input: "hogefuga"
+    input: 'hogefuga'
   },
 ],
 // RefMarkerを利用する場合
 [
   {
     functionName: 'defineRef',
-    input: "test",
+    input: 'test',
     output: z.string()
   },
   {
-    keyRef: "keyname",
+    keyRef: 'keyname',
     functionName: 'set',
-    input: "${#0}"
+    input: '${#0}'
   },
 ],
 ```
@@ -155,10 +155,10 @@ RedisコマンドをほぼそのままAPIに落とし込んだ内容です。
 ```ts
 [
   {
-    keyRef: "keyname",
+    keyRef: 'keyname',
     functionName: 'jsonGet',
     opts: {
-      path: "$"
+      path: '$'
     },
     output: z.object({
       value: z.object({
@@ -167,13 +167,13 @@ RedisコマンドをほぼそのままAPIに落とし込んだ内容です。
     })
   },
 ],
-// { value: { hoge: "fuga"}} から"fuga"を取得する場合
+// { value: { hoge: 'fuga'}} から'fuga'を取得する場合
 [
   {
-    keyRef: "keyname",
+    keyRef: 'keyname',
     functionName: 'jsonGet',
     opts: {
-      path: "$.value.hoge"
+      path: '$.value.hoge'
     },
     output: z.string()
   },
@@ -197,14 +197,14 @@ RedisコマンドをほぼそのままAPIに落とし込んだ内容です。
 [
   {
     functionName: 'defineRef',
-    input: ["key1","key2","key3"],
+    input: ['key1','key2','key3'],
     output: z.string().array()
   },
   {
-    multiKeysRef: "${#0}",
+    multiKeysRef: '${#0}',
     functionName: 'jsonMget',
     opts: {
-      path: "$"
+      path: '$'
     },
     output: z.object({
       value: z.object({
@@ -229,19 +229,19 @@ RedisコマンドをほぼそのままAPIに落とし込んだ内容です。
 設定例:
 
 ```ts
-// DBの { huga: <...> }の<...>値を "置き換える"
+// DBの { huga: <...> }の<...>値を '置き換える'
 // <...>内に{ data2: <...>, data3: <...> } が存在した場合
-// { data1: "value1", data2: "value2"}のような状態になる （opts.pathをinputで置き換える)
+// { data1: 'value1', data2: 'value2'}のような状態になる （opts.pathをinputで置き換える)
 [
   {
-    keyRef: "keyname",
+    keyRef: 'keyname',
     functionName: 'jsonSet',
     input: {
-      data1: "value1",
-      data2: "value2"
+      data1: 'value1',
+      data2: 'value2'
     },
     opts: {
-      path: "$.huga"
+      path: '$.huga'
     },
   },
 ],
@@ -250,8 +250,8 @@ RedisコマンドをほぼそのままAPIに落とし込んだ内容です。
   {
     functionName: 'defineRef',
     input: {
-      data1: "value1",
-      data2: "value2"
+      data1: 'value1',
+      data2: 'value2'
     },
     output: z.object({
       data1: z.string(),
@@ -259,9 +259,9 @@ RedisコマンドをほぼそのままAPIに落とし込んだ内容です。
     })
   },
   {
-    keyRef: "keyname",
+    keyRef: 'keyname',
     functionName: 'jsonSet',
-    input: "${#0}"
+    input: '${#0}'
   },
 ],
 ```
@@ -282,10 +282,10 @@ RedisコマンドをほぼそのままAPIに落とし込んだ内容です。
 // DBの { huga: <...> }の<...>値を削除する
 [
   {
-    keyRef: "keyname",
+    keyRef: 'keyname',
     functionName: 'jsonDel',
     opts: {
-      path: "$.huga"
+      path: '$.huga'
     },
   },
 ],
@@ -308,16 +308,16 @@ RedisコマンドをほぼそのままAPIに落とし込んだ内容です。
 // ranking キーに2つのユーザを登録する
 [
   {
-    keyRef: "ranking",
+    keyRef: 'ranking',
     functionName: 'zadd',
     input: [
       {
         score: 100,
-        member: "test1"
+        member: 'test1'
       },
       {
         score: 200,
-        member: "test2"
+        member: 'test2'
       },
     ]
   },
@@ -332,17 +332,17 @@ RedisコマンドをほぼそのままAPIに落とし込んだ内容です。
 | -------------- | -------------------------------------------------------------------------------------- |
 | functionName   | `zrem`                                                                                 |
 | keyRef         | データ値を削除するキーを設定します。                                                   |
-| input          | SortedSetで削除するメンバの配列`["member1","member2"...]`またはRefMarkerを指定します。 |
+| input          | SortedSetで削除するメンバの配列`['member1','member2'...]`またはRefMarkerを指定します。 |
 
 設定例:
 
 ```ts
-// ranking キーから２つのメンバ "test1","test2" を削除する
+// ranking キーから２つのメンバ 'test1','test2' を削除する
 [
   {
-    keyRef: "ranking",
+    keyRef: 'ranking',
     functionName: 'zrem',
-    input: ["test1","test2"]
+    input: ['test1','test2']
   },
 ],
 ```
@@ -361,12 +361,12 @@ RedisコマンドをほぼそのままAPIに落とし込んだ内容です。
 設定例:
 
 ```ts
-// ranking キーの"test1"の位置を取得する
+// ranking キーの'test1'の位置を取得する
 [
   {
-    keyRef: "ranking",
+    keyRef: 'ranking',
     functionName: 'zrank',
-    input: "test1",
+    input: 'test1',
     output: z.number()
   },
 ],
@@ -386,12 +386,12 @@ RedisコマンドをほぼそのままAPIに落とし込んだ内容です。
 設定例:
 
 ```ts
-// ranking キーの"test1"の位置を取得する
+// ranking キーの'test1'の位置を取得する
 [
   {
-    keyRef: "ranking",
+    keyRef: 'ranking',
     functionName: 'zrevrank',
-    input: "test1",
+    input: 'test1',
     output: z.number()
   },
 ],
@@ -415,7 +415,7 @@ RedisコマンドをほぼそのままAPIに落とし込んだ内容です。
 // ranking キーのデータを昇順にすべて取得する
 [
   {
-    keyRef: "ranking",
+    keyRef: 'ranking',
     functionName: 'zrange',
     input: {
       min: 0,
@@ -427,7 +427,7 @@ RedisコマンドをほぼそのままAPIに落とし込んだ内容です。
 // ranking キーのデータを降順ですべて取得する
 [
   {
-    keyRef: "ranking",
+    keyRef: 'ranking',
     functionName: 'zrange',
     input: {
       min: 0,
@@ -488,19 +488,19 @@ JSON値を設定します。設定したパスに他の値があっても、json
 設定例:
 
 ```ts
-// DBの { huga: <...> }の<...>値を "追加または更新" する。
+// DBの { huga: <...> }の<...>値を '追加または更新' する。
 // <...>内に{ data2: <...>, data3: <...> } が存在した場合
-// { data1: "value1", data2: "value2", data3: <...> }のような状態になる（opts.pathへ値を追加する）
+// { data1: 'value1', data2: 'value2', data3: <...> }のような状態になる（opts.pathへ値を追加する）
 [
   {
-    keyRef: "keyname",
+    keyRef: 'keyname',
     functionName: 'jsonSetSafe',
     input: {
-      data1: "value1",
-      data2: "value2"
+      data1: 'value1',
+      data2: 'value2'
     },
     opts: {
-      path: "$.huga"
+      path: '$.huga'
     },
   },
 ],
@@ -523,10 +523,10 @@ getThrowErrorのJson版です。
 ```ts
 [
   {
-    keyRef: "keyname",
+    keyRef: 'keyname',
     functionName: 'jsonGetThrowError',
     opts: {
-      path: "$"
+      path: '$'
     },
     output: z.object({
       value: z.object({
@@ -535,13 +535,13 @@ getThrowErrorのJson版です。
     })
   },
 ],
-// { value: { hoge: "fuga"}} から"fuga"を取得する場合
+// { value: { hoge: 'fuga'}} から'fuga'を取得する場合
 [
   {
-    keyRef: "keyname",
+    keyRef: 'keyname',
     functionName: 'jsonGetThrowError',
     opts: {
-      path: "$.value.hoge"
+      path: '$.value.hoge'
     },
     output: z.string()
   },
@@ -630,7 +630,7 @@ incrSumのラッパーで、複数のキーパターンを一気に検証しま�
 // keyname/* を検索する、 keyname/hoge keyname/hoge/fuga　 などがArrayで取得できる
 [
   {
-    keyRef: "keyname/*",
+    keyRef: 'keyname/*',
     functionName: 'scan',
     output: z.string().array(),
   },
@@ -760,16 +760,16 @@ Object in Arrayを展開し、Array in Objectにして出力します。
 例えば以下の値は...
 
 ```json
-{ "hoge": ["a", "b", "c"], "fuga": [100, 300, 500] }
+{ 'hoge': ['a', 'b', 'c'], 'fuga': [100, 300, 500] }
 ```
 
 以下のように変換されます。
 
 ```json
 [
-  { "hoge": "a", "fuga": 100 },
-  { "hoge": "b", "fuga": 300 },
-  { "hoge": "c", "fuga": 500 }
+  { 'hoge': 'a', 'fuga': 100 },
+  { 'hoge': 'b', 'fuga': 300 },
+  { 'hoge': 'c', 'fuga': 500 }
 ]
 ```
 
@@ -781,7 +781,7 @@ Object in Arrayを展開し、Array in Objectにして出力します。
 
 設定例:
 
-以下では `[100,200,300,400]`といった配列と`["a","b","c","d"]`といった配列に`score`,`member`の**名前をつけて**合成、`{score:100,member:"a"}`といったObjectにマージして配列として出力しています。
+以下では `[100,200,300,400]`といった配列と`['a','b','c','d']`といった配列に`score`,`member`の**名前をつけて**合成、`{score:100,member:'a'}`といったObjectにマージして配列として出力しています。
 
 ```ts
 // 処理#1と処理#2において配列が出力となっている内容を、zaddに入力できる形に変換する
@@ -912,6 +912,36 @@ Inputをパススルーします。固定値を定義したり、RefMarkerをObj
 ],
 ```
 
+### throwError
+
+inputのbool値が`true`の場合にカスタムエラーを出力します。
+
+| 必要パラメータ | 説明                                                                              |
+| -------------- | --------------------------------------------------------------------------------- |
+| functionName   | `throwError`                                                                      |
+| input          | bool値またはbool値を含むRefMarkerを設定します。                                   |
+| opts.name      | エラーの名前を設定します。APIの結果としての`error`パラメータに設定されます。      |
+| opts.message   | エラーの詳細を設定します。APIの結果としての`message`パラメータに設定されます。    |
+| opts.status    | エラーコードを数値で設定します。500~599の場合、エラー内容はログにのみ出力します。 |
+| opts.reverse   | inputのbool値が`false`の場合にカスタムエラーを出力するようにします。              |
+
+設定例:
+
+```ts
+// ユーザ(クライアント)に見える形でエラーを出力する
+[
+    {
+        functionName: 'throwError',
+        input: true,
+        opts: {
+          name: 'Custom Error',
+          message: 'This is custom error to user can know',
+          status: 400
+        },
+    },
+],
+```
+
 ### parseNum/parseBool
 
 InputをNumber/Booleanに変換します。できない場合`undefined`を返します。
@@ -929,7 +959,7 @@ InputをNumber/Booleanに変換します。できない場合`undefined`を返�
 [
     {
         functionName: 'parseNum',
-        input: "200",
+        input: '200',
         output: z.number(),
     },
 ],
@@ -937,7 +967,7 @@ InputをNumber/Booleanに変換します。できない場合`undefined`を返�
 [
     {
         functionName: 'parseBool',
-        input: "true",
+        input: 'true',
         output: z.boolean(),
     },
 ],
@@ -960,7 +990,7 @@ InputをNumber/Booleanに変換します。できない場合`undefined`を返�
 [
     {
         functionName: 'numSum',
-        input: "${#}", // <--- inputで配列を入力
+        input: '${#}', // <--- inputで配列を入力
         output: z.number(), // <--- 合計値が出力になる
     },
     {
@@ -988,7 +1018,7 @@ InputをNumber/Booleanに変換します。できない場合`undefined`を返�
 [
     {
         functionName: 'numCompare',
-        input: "${#}", // <--- 配列のRefMarker
+        input: '${#}', // <--- 配列のRefMarker
         output: z.boolean(), // すべての配列が一致している場合は true
     },
 ],
@@ -998,22 +1028,28 @@ InputをNumber/Booleanに変換します。できない場合`undefined`を返�
         functionName: 'numCompare',
         input: [100, 50, 30. 80], // <---- 直接配列で指定も可能
         opts: {
-          operator: "gt" // <-- 100 > 50, 100 > 30, 100 > 80 を検証
+          operator: 'gt' // <-- 100 > 50, 100 > 30, 100 > 80 を検証
         },
         output: z.boolean(), // <--- 上記の入力の場合は true
     },
 ],
 ```
 
-### isAllSame
+### isSame
 
-配列の値がすべて一致していた場合に`true`、そうでない場合に`false`を返します。
+配列の値がすべて一致していた場合に`true`、そうでない場合に`false`を返します。  
+`opts.notAll`によって、以下のように制御を変更することができます。
 
-| 必要パラメータ | 説明                                      |
-| -------------- | ----------------------------------------- |
-| functionName   | `defineRef`                               |
-| input          | 配列、または配列のRefMarkerを指定します。 |
-| output         | `z.boolean()`を定義します。               |
+- opts.notAll=falseで、戻り値が`true` → 配列のすべての値が同じである（全要素が同一である）
+- opts.notAll=trueで、戻り値が`true` → 配列の最初の値と同じ値が、配列内に存在する（特定の一要素を含む）
+- opts.notAll=trueで、戻り値が`false` → 配列内のすべての値が異なっている（全要素がユニークである）
+
+| 必要パラメータ | 説明                                                                                      |
+| -------------- | ----------------------------------------------------------------------------------------- |
+| functionName   | `defineRef`                                                                               |
+| input          | 配列、または配列のRefMarkerを指定します。                                                 |
+| opts.notAll    | フラグがonの場合、少なくとも1つ以上最初の値と一致している場合にtrueを返すようになります。 |
+| output         | `z.boolean()`を定義します。                                                               |
 
 設定例:
 
@@ -1021,17 +1057,38 @@ InputをNumber/Booleanに変換します。できない場合`undefined`を返�
 // numCompareとは違い、文字列の比較が可能
 [
     {
-        functionName: 'isAllSame',
-        input: ["hoge", "hoge", "hoge"],
+        functionName: 'isSame',
+        input: ['hoge', 'hoge', 'hoge'],
         output: z.boolean()
     },
 ],
 // 型が違う場合、当然false
 [
     {
-        functionName: 'isAllSame',
-        input: ["true", true],
+        functionName: 'isSame',
+        input: ['true', true],
         output: z.boolean()
+    },
+],
+// すべての値がユニークであることを判断可能
+// 以下はすべての値がユニークではない場合にエラーを投げる
+[
+    {
+        functionName: 'isSame',
+        input: ['hi', 'hey', 'yo'],
+        opts:{
+          notAll: true
+        },
+        output: z.boolean()
+    },
+    {
+        functionName: 'throwError',
+        input: '${#0}',
+        outs: {
+          name: "Dupulicate Error",
+          message: "Array contains duplicate value. array items must be unique",
+          status: 400
+        }
     },
 ],
 ```
