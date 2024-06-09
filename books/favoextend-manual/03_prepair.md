@@ -23,6 +23,11 @@ favoExtendを利用するにあたっての準備を行います。
 
 [favoExtendをfork](https://github.com/nkte8/favoExtend/fork)します。ご自身の環境へ`git clone`を行ってください。
 
+cloneする際は`v1`ブランチを使ってください。`main`および`v2`は開発中です  
+```sh
+git clone -b v1 https://github.com/<yourRepository>/favoExtend
+```
+
 cloneすると以下のようなファイルがカレントディレクトリに作成されます。
 ![Cloneしたファイル](/images/books/favoextend-manual/03_cloned.png)
 
